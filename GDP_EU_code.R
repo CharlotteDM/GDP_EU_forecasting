@@ -40,4 +40,9 @@ splits <- GDP_PL %>%
 train_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD < "2021-01-01",]
 test_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD > "2021-01-01",]
 
+#visualization: train & test data
+splits %>%
+  tk_time_series_cv_plan() %>%
+  plot_time_series_cv_plan(TIME_PERIOD, OBS_VALUE, .interactive = FALSE)
+
 
