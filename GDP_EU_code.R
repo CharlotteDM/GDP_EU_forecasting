@@ -32,5 +32,9 @@ GDP_PL <- GDP[GDP$geo == "PL", ]
 GDP_PL %>%
   plot_time_series(TIME_PERIOD, OBS_VALUE, .interactive = T, 
                    .title = "GDP in Poland", .x_lab = "Date", .y_lab = "current prices (million euro")
-?plot_time_series
 
+#splitting data into train and test sets
+train_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD < "2021-01-01",]
+test_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD > "2021-01-01",]
+
+?time_series_split
