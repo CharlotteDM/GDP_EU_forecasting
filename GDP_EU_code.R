@@ -35,12 +35,12 @@ GDP_PL %>%
 
 #splitting data into train and test sets
 splits <- GDP_PL %>%
-  time_series_split(assess = "3 months", cumulative = TRUE)
+  time_series_split(assess = "2 year", cumulative = TRUE)
 
 ?time_series_split
 
-train_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD < "2021-01-01",]
-test_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD > "2021-01-01",]
+#train_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD < "2021-01-01",]
+#test_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD > "2021-01-01",]
 
 #visualization: train & test data
 splits %>%
