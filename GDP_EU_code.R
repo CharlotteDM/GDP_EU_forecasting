@@ -96,3 +96,14 @@ calib_acc_tbl <- calib_tbl %>%
   table_modeltime_accuracy(
     .interactive = T)
 calib_acc_tbl #model prophet is performing the best, MAE=6068.66
+
+
+#refit the models to the full dataset 
+refit_tbl <- calib_tbl %>%
+  modeltime_refit(data = GDP_PL_new)
+refit_tbl <- refit_tbl %>%
+  modeltime_forecast(h = "3 years", actual_data = GDP_PL_new) %>%
+  plot_modeltime_forecast(
+    .legend_max_width = 25, 
+    .interactive      = T)
+refit_tbl
