@@ -67,6 +67,12 @@ mod_fit_ets <- exp_smoothing() %>%
   fit(OBS_VALUE ~ TIME_PERIOD, data = training(splits))
 mod_fit_ets
 
-
+#modeltime table
+models_tbl <- modeltime_table(
+  mod_fit_arima,
+  mod_fit_ets,
+  mod_fit_prophet
+)
+models_tbl
 
 
