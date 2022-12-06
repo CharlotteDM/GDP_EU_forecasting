@@ -79,3 +79,16 @@ models_tbl
 calib_tbl <- models_tbl %>%
   modeltime_calibrate(new_data = testing(splits))
 calib_tbl
+
+#interactive forecast plot visualization for all models
+calib_tbl %>%
+  modeltime_forecast(
+    new_data    = testing(splits),
+    actual_data = GDP_PL_new
+  ) %>%
+  plot_modeltime_forecast(
+    .legend_max_width = 25, 
+    .interactive      = T
+  )
+calib_tbl
+
