@@ -75,4 +75,7 @@ models_tbl <- modeltime_table(
 )
 models_tbl
 
-
+#calibration
+calib_tbl <- models_tbl %>%
+  modeltime_calibrate(new_data = testing(splits))
+calib_tbl
