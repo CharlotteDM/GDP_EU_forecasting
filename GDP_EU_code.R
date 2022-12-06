@@ -107,3 +107,27 @@ refit_tbl <- refit_tbl %>%
     .legend_max_width = 25, 
     .interactive      = T)
 refit_tbl
+
+#preprocessing
+recipe_spec <- recipe(OBS_VALUE ~ TIME_PERIOD, training(splits)) %>%
+  step_timeseries_signature(TIME_PERIOD) %>%
+  #step_rm(contains("am.pm"), contains("hour"), contains("minute"),
+         # contains("second"), contains("xts")) %>%
+  step_fourier(TIME_PERIOD, period = 365, K = 5) %>%
+  step_dummy(all_nominal())
+
+recipe_spec %>% prep() %>% juice()
+
+
+#Elastic Net
+model_spec_glmnet <- linear_reg(penalty = 0.01, mixture = 0.5) %>%
+  set_engine("glmnet")
+
+workflow_fit_glmnet <- workflow() %>%
+  add_model(model_spec_glmnet) %>%
+  add_recipe(recipe_spec %>% step_rm(TIME_PERIOD)) %>%
+  fit(training(splits))
+workflow_fit_glmnet
+
+
+
