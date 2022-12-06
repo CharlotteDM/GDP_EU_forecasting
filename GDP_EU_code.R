@@ -33,24 +33,21 @@ GDP_PL <- GDP[GDP$geo == "PL", ]
 GDP_PL_new <- GDP_PL %>% select(8,9)
 
 #visualization plot time
-#xyz <- GDP_PL_new %>%
-#  plot_time_series(TIME_PERIOD, OBS_VALUE, .interactive = T, 
-#                   .title = "GDP in Poland", .x_lab = "Date", .y_lab = "current prices (million euro)")
+plot_GDP_PL <- GDP_PL_new %>%
+ plot_time_series(TIME_PERIOD, OBS_VALUE, .interactive = T, 
+                  .title = "GDP in Poland", .x_lab = "Date", .y_lab = "current prices (million euro)")
+plot_GDP_PL
 
 #splitting data into train and test sets
 splits <- GDP_PL_new %>% time_series_split(assess = "2 years", cumulative = TRUE)
 
 
-#train_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD < "2021-01-01",]
-#test_GDP_PL <- GDP_PL[GDP_PL$TIME_PERIOD > "2021-01-01",]
 
 #visualization: train & test data
-splits %>%
+vis <- splits %>%
   tk_time_series_cv_plan() %>%
   plot_time_series_cv_plan(TIME_PERIOD, OBS_VALUE, .interactive = TRUE)
-
 vis
-
 
 #autoarima
 mod_fit_arima <- arima_reg() %>%
@@ -63,4 +60,13 @@ mod_fit_prophet <- prophet_reg(seasonality_yearly = TRUE) %>%
   set_engine("prophet") %>%
   fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
 mod_fit_prophet
+
+#ets
+mod_fit_ets <- exp_smoothing() %>%
+  set_engine(engine = "ets") %>%
+  fit(OBS_VALUE ~ TIME_PERIOD, data = training(splits))
+mod_fit_ets
+
+
+
 
