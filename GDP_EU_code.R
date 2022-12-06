@@ -56,4 +56,11 @@ vis
 mod_fit_arima <- arima_reg() %>%
   set_engine("auto_arima") %>%
   fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
+mod_fit_arima
+
+#prophet
+mod_fit_prophet <- prophet_reg(seasonality_yearly = TRUE) %>%
+  set_engine("prophet") %>%
+  fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
+mod_fit_prophet
 
