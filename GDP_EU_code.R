@@ -81,14 +81,14 @@ calib_tbl <- models_tbl %>%
 calib_tbl
 
 #interactive forecast plot visualization for all models
-calib_tbl %>%
+forecast_plot <- calib_tbl %>%
   modeltime_forecast(
     new_data    = testing(splits),
     actual_data = GDP_PL_new) %>%
   plot_modeltime_forecast(
     .legend_max_width = 25, 
     .interactive      = T)
-calib_tbl #model prophet looks the best
+forecast_plot #model prophet looks the best
 
 #accuracy metrics
 calib_acc_tbl <- calib_tbl %>%
