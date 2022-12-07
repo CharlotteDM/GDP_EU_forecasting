@@ -14,6 +14,7 @@ library(boot)
 library(GGally)
 library(xgboost)
 library(useful)
+library(plotly)
 
 
 
@@ -67,6 +68,11 @@ mod_fit_ets <- exp_smoothing() %>%
   set_engine(engine = "ets") %>%
   fit(OBS_VALUE ~ TIME_PERIOD, data = training(splits))
 mod_fit_ets
+
+#lm
+mod_fit_lm <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(OBS_VALUE ~ as.numeric(TIME_PERIOD), data = training(splits))
 
 #modeltime table
 models_tbl <- modeltime_table(
@@ -169,8 +175,8 @@ GDP_EU_plot <- ggplot(GDP_EU_new, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
     axis.title.x = element_text(color="steelblue2", size=14, face="bold"),
     axis.title.y = element_text(color="steelblue2", size=14, face="bold")) 
 GDP_EU_plot 
-
-
+#plotly
+ggplotly(GDP_EU_plot) 
 
 
 
