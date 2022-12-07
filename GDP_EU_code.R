@@ -13,6 +13,7 @@ library(coefplot)
 library(boot)
 library(GGally)
 library(xgboost)
+library(useful)
 
 
 
@@ -143,4 +144,28 @@ GDP_EU <- filter(GDP, geo == "PL" | geo == "AT" | geo == "BE" | geo == "BG" | ge
                    geo == "HU" | geo == "IT" )
 
 #choosing only three needed columns
-GDP_EU_new <- GDP_EU %>% select(7, 8,9)
+GDP_EU_new <- GDP_EU %>% select(7,8,9)
+
+#setting own palette
+own_pal <- c("coral", "deeppink", "darkturquoise", "darkred", "darkmagenta", "blue3", "cyan3", "darkorchid1",
+                "burlywood", "blueviolet", "aquamarine1", "darkolivegreen", "gold", "firebrick2", "dodgerblue2",
+             "greenyellow", "lightpink", "mediumpurple1", "maroon1", "lightskyblue", "lightsalmon3", "hotpink4",
+             "plum", "sienna", "violet", "thistle3", "tomato1")
+
+#Ggplot: GDP in EU Countries
+GDP_EU_plot <- ggplot(GDP_EU_new, aes(TIME_PERIOD, OBS_VALUE, color = geo, linetype = geo)) +
+  geom_line() +
+  #scale_y_continuous(label = euro)
+  labs(
+  title = "GDP in EU Countries",
+  subtitle = "current prices, million euro",
+  caption = "(based on data from: https://ec.europa.eu/eurostat/databrowser/view/NAMQ_10_GDP__custom_4050464/default/table?lang=en)",
+  x = "Time",
+  y = "GDP") +
+  scale_colour_manual(values=own_pal)
+GDP_EU_plot 
+
+
+
+
+
