@@ -130,4 +130,17 @@ workflow_fit_glmnet <- workflow() %>%
 workflow_fit_glmnet
 
 
+#filtering data from EU countries
+GDP_EU <- GDP[GDP$geo == c("PL","AT","BE", "BG", "CH", "CY", "CZ", "DE", "EE", "FI", 
+                           "EL", "FR", "NL", "ES", "IE", "LV", "LU", "LT", "MT", "DE",
+                           "PT", "RO", "SI", "SK", "SE", "HU", "IT"),  ]
 
+GDP_EU <- filter(GDP, geo == "PL" | geo == "AT" | geo == "BE" | geo == "BG" | geo == "CH" |
+                   geo == "CY" |geo == "CZ" | geo == "DE" | geo == "EE" |geo == "FI" | 
+                   geo == "EL" |  geo == "FR" | geo == "NL" |geo == "ES" | geo == "IE" | 
+                   geo == "LV" |geo == "LU" | geo == "LT" | geo == "MT" |geo == "DE" |
+                   geo == "PT" |  geo == "RO" |geo == "SI" | geo == "SK" | geo == "SE" |
+                   geo == "HU" | geo == "IT" )
+
+#choosing only three needed columns
+GDP_EU_new <- GDP_EU %>% select(7, 8,9)
