@@ -155,7 +155,6 @@ own_pal <- c("coral", "deeppink", "darkturquoise", "darkred", "darkmagenta", "bl
 #Ggplot: GDP in EU Countries
 GDP_EU_plot <- ggplot(GDP_EU_new, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
   geom_line() +
-  #scale_y_continuous(label = euro)
   labs(
   title = "GDP in EU Countries",
   subtitle = "current prices, million euro",
