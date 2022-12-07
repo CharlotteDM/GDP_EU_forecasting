@@ -78,7 +78,8 @@ mod_fit_lm <- linear_reg() %>%
 models_tbl <- modeltime_table(
   mod_fit_arima,
   mod_fit_ets,
-  mod_fit_prophet
+  mod_fit_prophet,
+  mod_fit_lm
 )
 models_tbl
 
