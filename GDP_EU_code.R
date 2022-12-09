@@ -188,9 +188,32 @@ GDP_percapita$TIME_PERIOD <- strptime(GDP_percapita$TIME_PERIOD, format = "%Y")
 
 
 #filtering data from EU countries - real GDP per capita
-GDP_EU <- filter(GDP, geo == "PL" | geo == "AT" | geo == "BE" | geo == "BG" | geo == "CH" |
+GDP_EU_pcpt <- filter(GDP_percapita, geo == "PL" | geo == "AT" | geo == "BE" | geo == "BG" | geo == "CH" |
                    geo == "CY" |geo == "CZ" | geo == "DE" | geo == "EE" |geo == "FI" | 
                    geo == "EL" |  geo == "FR" | geo == "NL" |geo == "ES" | geo == "IE" | 
                    geo == "LV" |geo == "LU" | geo == "LT" | geo == "MT" |geo == "DE" |
                    geo == "PT" |  geo == "RO" |geo == "SI" | geo == "SK" | geo == "SE" |
                    geo == "HU" | geo == "IT" )
+
+#choosing only three needed columns
+GDP_EU_pcpt <- GDP_EU_pcpt %>% select(6,7,8)
+
+#Ggplot: GDP real per capita in EU Countries 
+GDP_EU_pcpt_plot <- ggplot(GDP_EU_pcpt, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
+  geom_line() +
+  labs(
+    title = "Real GDP in EU Countries",
+    subtitle = "in euro, per capita",
+    caption = "(based on data from: https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en)",
+    x = "Time",
+    y = "GDP") +
+  scale_colour_manual(values=own_pal) +
+  theme(
+    plot.title = element_text(color="royalblue4", size=14, face="bold", hjust = 0.5),
+    plot.subtitle = element_text(color="royalblue4", size=10, hjust = 0.5),
+    plot.caption = element_text(color="darkblue", size=10, hjust = 0.5),
+    axis.title.x = element_text(color="steelblue2", size=14, face="bold"),
+    axis.title.y = element_text(color="steelblue2", size=14, face="bold")) 
+GDP_EU_pcpt_plot 
+#plotly
+ggplotly(GDP_EU_pcpt_plot) 
