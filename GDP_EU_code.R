@@ -216,4 +216,4 @@ GDP_EU_pcpt_plot <- ggplot(GDP_EU_pcpt, aes(TIME_PERIOD, OBS_VALUE, color = geo)
     axis.title.y = element_text(color="steelblue2", size=14, face="bold")) 
 GDP_EU_pcpt_plot 
 #plotly
-ggplotly(GDP_EU_pcpt_plot) 
+ggplotly(GDP_EU_pcpt_plot) #The highest absolute GDP value is observed in Germany. The highest values GDP per capita is observed in Luxembourg
