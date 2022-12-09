@@ -21,7 +21,7 @@ library(plotly)
 path <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(path)
 
-#loading data: GDP
+#loading data: GDP 
 #source of data: https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table?lang=en
 GDP <- read.csv("gdp_quart_eu.csv", stringsAsFactors = F)
 
@@ -106,7 +106,7 @@ calib_acc_tbl <- calib_tbl %>%
 calib_acc_tbl #model prophet is performing the best, MAE=6068.66
 
 
-#refit the models to the full dataset 
+#refitting the models to the full dataset 
 refit_tbl <- calib_tbl %>%
   modeltime_refit(data = GDP_PL_new)
 refit_tbl <- refit_tbl %>%
@@ -180,4 +180,9 @@ GDP_EU_plot
 ggplotly(GDP_EU_plot) 
 
 
+#loading data: GDP - real GDP (euro, per capita)
+#source of data: https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en
+GDP_percapita <- read.csv("GDP_EU_Real_percapita.csv", stringsAsFactors = F)
 
+#quarter as a date
+GDP$TIME_PERIOD <- yq(GDP$TIME_PERIOD)   
