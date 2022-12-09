@@ -1,7 +1,7 @@
 library(tidymodels)
 library(modeltime)
 library(timetk)   
-#library(zoo)
+library(zoo)
 library(lubridate)
 library(dplyr)
 library(tidyverse)
@@ -139,10 +139,6 @@ workflow_fit_glmnet
 
 
 #filtering data from EU countries
-GDP_EU <- GDP[GDP$geo == c("PL","AT","BE", "BG", "CH", "CY", "CZ", "DE", "EE", "FI", 
-                           "EL", "FR", "NL", "ES", "IE", "LV", "LU", "LT", "MT", "DE",
-                           "PT", "RO", "SI", "SK", "SE", "HU", "IT"),  ]
-
 GDP_EU <- filter(GDP, geo == "PL" | geo == "AT" | geo == "BE" | geo == "BG" | geo == "CH" |
                    geo == "CY" |geo == "CZ" | geo == "DE" | geo == "EE" |geo == "FI" | 
                    geo == "EL" |  geo == "FR" | geo == "NL" |geo == "ES" | geo == "IE" | 
@@ -184,5 +180,17 @@ ggplotly(GDP_EU_plot)
 #source of data: https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en
 GDP_percapita <- read.csv("GDP_EU_Real_percapita.csv", stringsAsFactors = F)
 
-#quarter as a date
-GDP$TIME_PERIOD <- yq(GDP$TIME_PERIOD)   
+#time period as a date
+GDP_percapita$TIME_PERIOD <- as.Date(GDP_percapita$TIME_PERIOD)  
+
+class(GDP_percapita$TIME_PERIOD)
+GDP_percapita$TIME_PERIOD <- strptime(GDP_percapita$TIME_PERIOD, format = "%Y")   
+
+
+#filtering data from EU countries - real GDP per capita
+GDP_EU <- filter(GDP, geo == "PL" | geo == "AT" | geo == "BE" | geo == "BG" | geo == "CH" |
+                   geo == "CY" |geo == "CZ" | geo == "DE" | geo == "EE" |geo == "FI" | 
+                   geo == "EL" |  geo == "FR" | geo == "NL" |geo == "ES" | geo == "IE" | 
+                   geo == "LV" |geo == "LU" | geo == "LT" | geo == "MT" |geo == "DE" |
+                   geo == "PT" |  geo == "RO" |geo == "SI" | geo == "SK" | geo == "SE" |
+                   geo == "HU" | geo == "IT" )
