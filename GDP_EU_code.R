@@ -222,3 +222,23 @@ ggplotly(GDP_EU_pcpt_plot)
 
 #PL & DE - comparison
 GDP_PLDE_pcpt <- filter(GDP_EU_pcpt, geo == "PL" | geo == "DE")
+
+#Ggplot: GDP real per capita in Poland & Germany
+GDP_PLDE_pcpt_plot <- ggplot(GDP_PLDE_pcpt, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
+  geom_line() +
+  labs(
+    title = "Real GDP in Poland & Germany",
+    subtitle = "in euro, per capita",
+    caption = "(based on data from: https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en)",
+    x = "Time",
+    y = "GDP") +
+  scale_colour_manual(values=own_pal) +
+  theme(
+    plot.title = element_text(color="royalblue4", size=14, face="bold", hjust = 0.5),
+    plot.subtitle = element_text(color="royalblue4", size=10, hjust = 0.5),
+    plot.caption = element_text(color="darkblue", size=10, hjust = 0.5),
+    axis.title.x = element_text(color="steelblue2", size=14, face="bold"),
+    axis.title.y = element_text(color="steelblue2", size=14, face="bold")) 
+GDP_PLDE_pcpt_plot 
+#plotly
+ggplotly(GDP_PLDE_pcpt_plot) 
