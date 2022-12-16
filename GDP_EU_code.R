@@ -183,7 +183,7 @@ GDP_percapita <- read.csv("GDP_EU_Real_percapita.csv", stringsAsFactors = F)
 GDP_percapita <- GDP_percapita[-c(846:1686), ]
 
 #time period as a date
-GDP_percapita$TIME_PERIOD <- as.Date(GDP_percapita$TIME_PERIOD)  
+GDP_percapita$TIME_PERIOD <- as.Date(as.character(GDP_percapita$TIME_PERIOD), format = "%Y")
 class(GDP_percapita$TIME_PERIOD)
 
 
