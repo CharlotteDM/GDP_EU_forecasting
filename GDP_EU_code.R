@@ -184,9 +184,7 @@ GDP_percapita <- GDP_percapita[-c(846:1686), ]
 
 #time period as a date
 GDP_percapita$TIME_PERIOD <- as.Date(GDP_percapita$TIME_PERIOD)  
-
 class(GDP_percapita$TIME_PERIOD)
-GDP_percapita$TIME_PERIOD <- strptime(GDP_percapita$TIME_PERIOD, format = "%Y")   
 
 
 #filtering data from EU countries - real GDP per capita
