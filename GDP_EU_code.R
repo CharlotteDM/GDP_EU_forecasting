@@ -220,5 +220,5 @@ ggplotly(GDP_EU_pcpt_plot)
 #Conclusions:
 #The highest absolute GDP value is observed in Germany. The highest values GDP per capita is observed in Luxembourg
 
-#PL & DE - comparision
+#PL & DE - comparison
 GDP_PLDE_pcpt <- filter(GDP_EU_pcpt, geo == "PL" | geo == "DE")
