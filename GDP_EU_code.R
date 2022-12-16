@@ -180,6 +180,8 @@ ggplotly(GDP_EU_plot)
 #source of data: https://ec.europa.eu/eurostat/databrowser/view/sdg_08_10/default/table?lang=en
 GDP_percapita <- read.csv("GDP_EU_Real_percapita.csv", stringsAsFactors = F)
 
+GDP_percapita <- GDP_percapita[-c(846:1686), ]
+
 #time period as a date
 GDP_percapita$TIME_PERIOD <- as.Date(GDP_percapita$TIME_PERIOD)  
 
@@ -219,3 +221,6 @@ GDP_EU_pcpt_plot
 ggplotly(GDP_EU_pcpt_plot) 
 #Conclusions:
 #The highest absolute GDP value is observed in Germany. The highest values GDP per capita is observed in Luxembourg
+
+#PL & DE - comparision
+GDP_PLDE_pcpt <- filter(GDP_EU_pcpt, geo == "PL" | geo == "DE")
