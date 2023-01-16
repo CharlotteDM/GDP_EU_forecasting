@@ -16,7 +16,7 @@ library(xgboost)
 library(useful)
 library(plotly)
 
-
+renv::init()
 
 path <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(path)
