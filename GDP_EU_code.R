@@ -21,6 +21,13 @@ renv::init()
 path <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(path)
 
+
+#Bibliography: 
+#___https://cran.r-project.org/web/packages/modeltime/vignettes/getting-started-with-modeltime.html
+#___Lander, J. P. (2014). R for everyone: Advanced analytics and graphics. Pearson Education.
+#___https://github.com/hyunjoonbok/R-projects/blob/master/Times%20Series%20Forecasting%20%26%20Anomaly%20Detection/Time%20Series%20Forecasting%20using%20ModelTime.R
+
+
 #loading data: GDP 
 #source of data: https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table?lang=en
 GDP <- read.csv("gdp_quart_eu.csv", stringsAsFactors = F)
@@ -44,37 +51,41 @@ plot_GDP_PL
 splits <- GDP_PL_new %>% time_series_split(assess = "2 years", cumulative = TRUE)
 
 
-
 #visualization: train & test data
 vis <- splits %>%
   tk_time_series_cv_plan() %>%
   plot_time_series_cv_plan(TIME_PERIOD, OBS_VALUE, .interactive = TRUE)
 vis
 
-#autoarima
+
+#Auto ARIMA Model
 mod_fit_arima <- arima_reg() %>%
   set_engine("auto_arima") %>%
   fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
 mod_fit_arima
 
-#prophet
+
+# Fit PROPHET Model
 mod_fit_prophet <- prophet_reg(seasonality_yearly = TRUE) %>%
   set_engine("prophet") %>%
   fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
 mod_fit_prophet
 
-#ets
+
+#Error Trend Season Model (ET) with function Expotential Smoothing State Space
 mod_fit_ets <- exp_smoothing() %>%
   set_engine(engine = "ets") %>%
   fit(OBS_VALUE ~ TIME_PERIOD, data = training(splits))
 mod_fit_ets
 
-#lm
+
+#Linear Regression Model
 mod_fit_lm <- linear_reg() %>%
   set_engine("lm") %>%
   fit(OBS_VALUE ~ as.numeric(TIME_PERIOD), data = training(splits))
 
-#modeltime table
+
+#Modeltime Table
 models_tbl <- modeltime_table(
   mod_fit_arima,
   mod_fit_ets,
@@ -83,12 +94,15 @@ models_tbl <- modeltime_table(
 )
 models_tbl
 
-#calibration
+
+#Calibrating the model for testing data
 calib_tbl <- models_tbl %>%
   modeltime_calibrate(new_data = testing(splits))
 calib_tbl
 
-#interactive forecast plot visualization for all models
+
+
+#Interactive Forecast Plot Visualization for All Models
 forecast_plot <- calib_tbl %>%
   modeltime_forecast(
     new_data    = testing(splits),
@@ -98,15 +112,16 @@ forecast_plot <- calib_tbl %>%
     .interactive      = T)
 forecast_plot #model prophet looks the best
 
-#accuracy metrics
+
+#Accuracy Metrics
 calib_acc_tbl <- calib_tbl %>%
   modeltime_accuracy() %>%
   table_modeltime_accuracy(
     .interactive = T)
-calib_acc_tbl #model prophet is performing the best, MAE=6068.66
+calib_acc_tbl #model prophet is performing the best, MAE=17258.46
 
 
-#refitting the models to the full dataset 
+#refitting the Models to the Full Dataset 
 refit_tbl <- calib_tbl %>%
   modeltime_refit(data = GDP_PL_new)
 refit_tbl <- refit_tbl %>%
