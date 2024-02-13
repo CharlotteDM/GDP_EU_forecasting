@@ -15,6 +15,8 @@ library(GGally)
 library(xgboost)
 library(useful)
 library(plotly)
+install.packages("glmnet")
+library(glmnet)
 
 renv::init()
 
@@ -28,7 +30,7 @@ setwd(path)
 #___https://github.com/hyunjoonbok/R-projects/blob/master/Times%20Series%20Forecasting%20%26%20Anomaly%20Detection/Time%20Series%20Forecasting%20using%20ModelTime.R
 
 
-#loading data: GDP 
+#loading data: GDP (and main components - output, expenditure, income)
 #source of data: https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table?lang=en
 GDP <- read.csv("gdp_quart_eu.csv", stringsAsFactors = F)
 
@@ -131,11 +133,12 @@ refit_tbl <- refit_tbl %>%
     .interactive      = T)
 refit_tbl
 
-#preprocessing
+
+#Preprocessing
 recipe_spec <- recipe(OBS_VALUE ~ TIME_PERIOD, training(splits)) %>%
   step_timeseries_signature(TIME_PERIOD) %>%
-  #step_rm(contains("am.pm"), contains("hour"), contains("minute"),
-         # contains("second"), contains("xts")) %>%
+  step_rm(contains("am.pm"), contains("hour"), contains("minute"),
+          contains("second"), contains("xts")) %>%
   step_fourier(TIME_PERIOD, period = 365, K = 5) %>%
   step_dummy(all_nominal())
 
@@ -151,6 +154,9 @@ workflow_fit_glmnet <- workflow() %>%
   add_recipe(recipe_spec %>% step_rm(TIME_PERIOD)) %>%
   fit(training(splits))
 workflow_fit_glmnet
+
+
+
 
 
 #filtering data from EU countries
