@@ -17,7 +17,14 @@ library(useful)
 library(plotly)
 install.packages("glmnet")
 library(glmnet)
+install.packages("randomForest")
+library(randomForest)
+library(parsnip)
+install.packages("caTools") 
+library(caTools)
 
+
+library(workflows)
 renv::init()
 
 path <- dirname(rstudioapi::getActiveDocumentContext()$path)
@@ -144,16 +151,6 @@ recipe_spec <- recipe(OBS_VALUE ~ TIME_PERIOD, training(splits)) %>%
 
 recipe_spec %>% prep() %>% juice()
 
-
-#Elastic Net
-model_spec_glmnet <- linear_reg(penalty = 0.01, mixture = 0.5) %>%
-  set_engine("glmnet")
-
-workflow_fit_glmnet <- workflow() %>%
-  add_model(model_spec_glmnet) %>%
-  add_recipe(recipe_spec %>% step_rm(TIME_PERIOD)) %>%
-  fit(training(splits))
-workflow_fit_glmnet
 
 
 
