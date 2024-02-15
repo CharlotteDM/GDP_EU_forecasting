@@ -15,16 +15,7 @@ library(GGally)
 library(xgboost)
 library(useful)
 library(plotly)
-install.packages("glmnet")
-library(glmnet)
-install.packages("randomForest")
-library(randomForest)
-library(parsnip)
-install.packages("caTools") 
-library(caTools)
 
-
-library(workflows)
 renv::init()
 
 path <- dirname(rstudioapi::getActiveDocumentContext()$path)
@@ -235,6 +226,8 @@ GDP_EU_pcpt_plot <- ggplot(GDP_EU_pcpt, aes(TIME_PERIOD, OBS_VALUE, color = geo)
 GDP_EU_pcpt_plot 
 #plotly
 ggplotly(GDP_EU_pcpt_plot) 
+
+
 #Conclusions:
 #The highest absolute GDP value is observed in Germany. The highest values GDP per capita is observed in Luxembourg
 
