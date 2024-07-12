@@ -1,4 +1,5 @@
 library(tidymodels)
+install.packages("modeltime")
 library(modeltime)
 library(timetk)   
 library(zoo)
@@ -7,7 +8,9 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+install.packages("highcharter")
 library(highcharter)
+install.packages("ggfortify")
 library(ggfortify)
 library(coefplot)
 library(boot)
@@ -15,7 +18,7 @@ library(GGally)
 library(xgboost)
 library(useful)
 library(plotly)
-
+library(generics)
 renv::init()
 
 path <- dirname(rstudioapi::getActiveDocumentContext()$path)
@@ -38,17 +41,17 @@ GDP$TIME_PERIOD <- yq(GDP$TIME_PERIOD)
 #filtering data from Poland
 GDP_PL <- GDP[GDP$geo == "PL", ]
 
-#choosing only two needed columns
-GDP_PL_new <- GDP_PL %>% select(8,9)
+
+
 
 #visualization plot time
-plot_GDP_PL <- GDP_PL_new %>%
+plot_GDP_PL <- GDP_PL %>%
  plot_time_series(TIME_PERIOD, OBS_VALUE, .interactive = T, 
                   .title = "GDP in Poland", .x_lab = "Date", .y_lab = "current prices (million euro)")
 plot_GDP_PL
 
 #splitting data into train and test sets
-splits <- GDP_PL_new %>% time_series_split(assess = "2 years", cumulative = TRUE)
+splits <- GDP_PL %>% time_series_split(assess = "2 years", cumulative = TRUE)
 
 
 #visualization: train & test data
@@ -61,21 +64,21 @@ vis
 #Auto ARIMA Model
 mod_fit_arima <- arima_reg() %>%
   set_engine("auto_arima") %>%
-  fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
+  generics::fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
 mod_fit_arima
 
 
 # Fit PROPHET Model
 mod_fit_prophet <- prophet_reg(seasonality_yearly = TRUE) %>%
   set_engine("prophet") %>%
-  fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
+  generics::fit(OBS_VALUE ~ TIME_PERIOD, training(splits))
 mod_fit_prophet
 
 
 #Error Trend Season Model (ET) with function Expotential Smoothing State Space
 mod_fit_ets <- exp_smoothing() %>%
   set_engine(engine = "ets") %>%
-  fit(OBS_VALUE ~ TIME_PERIOD, data = training(splits))
+  generics::fit(OBS_VALUE ~ TIME_PERIOD, data = training(splits))
 mod_fit_ets
 
 
@@ -106,7 +109,7 @@ calib_tbl
 forecast_plot <- calib_tbl %>%
   modeltime_forecast(
     new_data    = testing(splits),
-    actual_data = GDP_PL_new) %>%
+    actual_data = GDP_PL) %>%
   plot_modeltime_forecast(
     .legend_max_width = 25, 
     .interactive      = T)
@@ -123,9 +126,9 @@ calib_acc_tbl #model prophet is performing the best, MAE=17258.46
 
 #refitting the Models to the Full Dataset 
 refit_tbl <- calib_tbl %>%
-  modeltime_refit(data = GDP_PL_new)
+  modeltime_refit(data = GDP_PL)
 refit_tbl <- refit_tbl %>%
-  modeltime_forecast(h = "3 years", actual_data = GDP_PL_new) %>%
+  modeltime_forecast(h = "3 years", actual_data = GDP_PL) %>%
   plot_modeltime_forecast(
     .legend_max_width = 25, 
     .interactive      = T)
@@ -155,8 +158,7 @@ GDP_EU <- filter(GDP, geo == "PL" | geo == "AT" | geo == "BE" | geo == "BG" | ge
                    geo == "PT" |  geo == "RO" |geo == "SI" | geo == "SK" | geo == "SE" |
                    geo == "HU" | geo == "IT" )
 
-#choosing only three needed columns
-GDP_EU_new <- GDP_EU %>% select(7,8,9)
+
 
 #setting own palette
 own_pal <- c("coral", "deeppink", "darkturquoise", "darkred", "darkmagenta", "blue3", "cyan3", "darkorchid1",
@@ -165,7 +167,7 @@ own_pal <- c("coral", "deeppink", "darkturquoise", "darkred", "darkmagenta", "bl
              "plum", "sienna", "violet", "thistle3", "tomato1")
 
 #Ggplot: GDP in EU Countries
-GDP_EU_plot <- ggplot(GDP_EU_new, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
+GDP_EU_plot <- ggplot(GDP_EU, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
   geom_line() +
   labs(
   title = "GDP in EU Countries",
@@ -204,11 +206,10 @@ GDP_EU_pcpt <- filter(GDP_percapita, geo == "PL" | geo == "AT" | geo == "BE" | g
                    geo == "PT" |  geo == "RO" |geo == "SI" | geo == "SK" | geo == "SE" |
                    geo == "HU" | geo == "IT" )
 
-#choosing only three needed columns
-GDP_EU_pcpt <- GDP_EU_pcpt %>% select(6,7,8)
+
 
 #Ggplot: GDP real per capita in EU Countries 
-GDP_EU_pcpt_plot <- ggplot(GDP_EU_pcpt, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
+GDP_EU_pcpt_plot <- ggplot(GDP_EU, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
   geom_line() +
   labs(
     title = "Real GDP in EU Countries",
@@ -232,7 +233,7 @@ ggplotly(GDP_EU_pcpt_plot)
 #The highest absolute GDP value is observed in Germany. The highest values GDP per capita is observed in Luxembourg
 
 #PL & DE - comparison
-GDP_PLDE_pcpt <- filter(GDP_EU_pcpt, geo == "PL" | geo == "DE")
+GDP_PLDE_pcpt <- filter(GDP_EU, geo == "PL" | geo == "DE")
 
 #Ggplot: GDP real per capita in Poland & Germany
 GDP_PLDE_pcpt_plot <- ggplot(GDP_PLDE_pcpt, aes(TIME_PERIOD, OBS_VALUE, color = geo)) +
